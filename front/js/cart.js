@@ -39,16 +39,13 @@ for (let i in getProducts) {
 // variables HTML
 let totalQuantity = document.getElementById("totalQuantity")
 let totalPrice = document.getElementById("totalPrice")
-
-
 // obtenir prix total
 function getPrice() {
     let number = 0;
     for (let product of getProducts) {
         number += product.price*product.quantity
     }
-    return number
-    
+    return number 
 }
 // obtenir quantité totale
 function getQuantity() {
@@ -59,8 +56,6 @@ function getQuantity() {
     return number
 }
 // resultat final
-
-
 function calcTotal(){
     totalPrice.innerText = getPrice();
     totalQuantity.innerText = getQuantity();
@@ -75,6 +70,10 @@ let sendProduct = localStorage.setItem("products",JSON.stringify(getProducts));
 let itemQuantity = document.getElementsByName("itemQuantity");
 
 itemQuantity.forEach((element, i) => element.addEventListener('change', function(event) {
+    if (parseInt(event.target.value) < 1 || parseInt(event.target.value) > 100  ) {
+        alert ('Selectionnez une quantité comprise entre 1 et 100')
+        return
+    };
     getProducts[i].quantity = parseInt(event.target.value);
     localStorage.setItem("products", JSON.stringify(getProducts));
     calcTotal();
@@ -83,12 +82,12 @@ itemQuantity.forEach((element, i) => element.addEventListener('change', function
 
 
 //supprimer un produit du localStorage;
-
 function initDeleteItemEvent() {
     let deleteItem = document.querySelectorAll('.deleteItem');
 
     for (let i = 0; i < deleteItem.length; i++) {
         deleteItem[i].addEventListener('click', function(event) {
+            //eviter que l'event ne se propage
             event.preventDefault();
 
             let idDelete = getProducts[i].id;
@@ -101,7 +100,6 @@ function initDeleteItemEvent() {
         });
     };
 }
-
 initDeleteItemEvent();
 
 
@@ -214,13 +212,11 @@ function initCommanderButtonEvent () {
         let formAddress = document.getElementById('address');
         let formCity = document.getElementById('city');
         let formEmail = document.getElementById('email');
-
         // construction array localStorage
         let orderProducts = [];
         for (let i = 0; i<getProducts.length;i++) {
             orderProducts.push(getProducts[i].id);
         }
-
         // objet de commande
         let order = {
             contact : {
@@ -232,8 +228,8 @@ function initCommanderButtonEvent () {
             },
             products: orderProducts,
         };
-
-        // method POST
+        // method POST pour creer une ressource
+        // parametrage du bon content-Type pour données encodées en JSON
         const options = {
             method: 'POST',
             body: JSON.stringify(order),
@@ -248,6 +244,8 @@ function initCommanderButtonEvent () {
         .then((response) => response.json())
         .then((data) => {
             localStorage.clear();
+            // setItem stock la donnée
+            // iD de l'input
             localStorage.setItem("orderId", data.orderId);
 
             document.location.href = "confirmation.html";

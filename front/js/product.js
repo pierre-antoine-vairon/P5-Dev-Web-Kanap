@@ -44,15 +44,10 @@ const addToCartBtn = document.getElementById('addToCart')
 const productQuantity = document.getElementById('quantity')
 
 
-
-
-
-
-
-
 addToCartBtn.addEventListener('click', function() {
-    if (productColors.value === "" || parseInt(productQuantity.value) < 1 ) {
-        alert ('Selectionnez une couleur et une quantité')
+    // parseInt analyse une chaine de caractère pour renvoyer un entier
+    if (productColors.value === "" || parseInt(productQuantity.value) < 1 || parseInt(productQuantity.value) > 100  ) {
+        alert ('Selectionnez une couleur et une quantité comprise entre 1 et 100')
         return
     };
 
@@ -69,7 +64,7 @@ addToCartBtn.addEventListener('click', function() {
     };  
     
     
-
+    //JSON.parse : reforme une chaine de caractère json en objet JS utilisable
     let getProducts = JSON.parse(localStorage.getItem("products"));
 
 
@@ -86,9 +81,10 @@ addToCartBtn.addEventListener('click', function() {
     };
 
     if (newProduct !== null) {
+        // push() ajoute l'element au tableau
         getProducts.push(newProduct)
     };
-    
+    // JSON.stringify transforme l'objet en chaine de caractère
     localStorage.setItem("products", JSON.stringify(getProducts))
 }); 
 
